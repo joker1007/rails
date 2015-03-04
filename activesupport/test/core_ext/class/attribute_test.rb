@@ -4,12 +4,19 @@ require 'active_support/core_ext/class/attribute'
 class ClassAttributeTest < ActiveSupport::TestCase
   def setup
     @klass = Class.new { class_attribute :setting }
+    @klass_with_default = Class.new do
+      class_attribute(:setting) { Array.new }
+    end
     @sub = Class.new(@klass)
   end
 
   test 'defaults to nil' do
     assert_nil @klass.setting
     assert_nil @sub.setting
+  end
+
+  test 'defaults to block result if given block' do
+    assert_equal [], @klass_with_default.setting
   end
 
   test 'inheritable' do

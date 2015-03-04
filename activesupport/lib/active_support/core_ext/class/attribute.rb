@@ -75,7 +75,8 @@ class Class
     instance_predicate = options.fetch(:instance_predicate, true)
 
     attrs.each do |name|
-      define_singleton_method(name) { nil }
+      default_value = block_given? ? yield : nil
+      define_singleton_method(name) { default_value }
       define_singleton_method("#{name}?") { !!public_send(name) } if instance_predicate
 
       ivar = "@#{name}"
